@@ -31,10 +31,12 @@ public class app {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws SQLException, UnsupportedLookAndFeelException {
+    public static void main(String[] args) throws SQLException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         //TEMA OSCURO
-        BasicLookAndFeel darcula = new DarculaLaf();
-        UIManager.setLookAndFeel(darcula);
+        /*BasicLookAndFeel darcula = new DarculaLaf();
+        UIManager.setLookAndFeel(darcula);*/
+        
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
         Sistema.conectar();
         FrmLogin vista = new FrmLogin();
