@@ -5,21 +5,15 @@
  */
 package controlador;
 
-import com.mysql.jdbc.Connection;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import vista.FrmMedio;
-import vista.FrmNuevaOperacion;
 import vista.FrmVistaGeneral;
 
 /**
@@ -27,44 +21,22 @@ import vista.FrmVistaGeneral;
  * @author Esteban
  */
 public class ControladorFrmVistaGeneral {
+    
     private FrmVistaGeneral vista;
 
-    private static Connection con;
-    private static Statement st;
-    private static ResultSet rs;
-    
-    private static final String driver="com.mysql.jdbc.Driver";
-    private static final String user="esteban";
-    private static final String pass="123";
-    //private static final String url="jdbc:mysql://localhost:3306/ahorros_bd";
-    private static final String url="jdbc:mysql://8.12.17.20:3306/finance_bd";
-    
     public ControladorFrmVistaGeneral(FrmVistaGeneral vista) throws SQLException {
         this.vista = vista;
         frmIniciar(); 
         funcionalidades();
     }
     
-    public void conectar() throws SQLException {
-        con=null;
-        try{
-            Class.forName(driver);
-            con= (Connection) DriverManager.getConnection(url, user, pass);
-        }
-        catch (ClassNotFoundException | SQLException e){
-            System.out.println("Error de conexion: "+e);
-        }
-    }
-    
-    
-    
     private void obtenerDineroTotal() throws SQLException{
         try {
-            conectar();
-            st=con.createStatement();
-            rs=st.executeQuery("SELECT dinero_total FROM usuario WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
-            if(rs.next()){
-                vista.txtDineroTotal.setText(String.format("%.2f", rs.getFloat("dinero_total")));
+            //conectar();
+            Sistema.st=Sistema.con.createStatement();
+            Sistema.rs=Sistema.st.executeQuery("SELECT dinero_total FROM usuario WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
+            if(Sistema.rs.next()){
+                vista.txtDineroTotal.setText(String.format("%.2f", Sistema.rs.getFloat("dinero_total")));
             }
         } catch (Exception e) {
         }
@@ -82,7 +54,7 @@ public class ControladorFrmVistaGeneral {
         PreparedStatement ps=null;
         ResultSet rsT;
         String sql ="SELECT cod_medio,nombre_medio,monto_total,descripcion FROM medio WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
-        ps=con.prepareStatement(sql);
+        ps=Sistema.con.prepareStatement(sql);
         rsT=ps.executeQuery();
         
         ResultSetMetaData rsMD = rsT.getMetaData();
@@ -102,8 +74,9 @@ public class ControladorFrmVistaGeneral {
         this.vista.btnMedios.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FrmMedio vistaM = new FrmMedio();
+                
                 try {
+                    FrmMedio vistaM = new FrmMedio();
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
                     vista.dispose();
                 } catch (SQLException ex) {
@@ -111,27 +84,6 @@ public class ControladorFrmVistaGeneral {
                 }
             }
         });
-        
-        /*this.vista.btnNuevaOperacion.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FrmNuevaOperacion vistaNO = new FrmNuevaOperacion();
-                try {
-                    ControladorFrmNuevaOperacion controladorNO = new ControladorFrmNuevaOperacion(vistaNO);
-                    vista.dispose();
-                } catch (SQLException ex) {
-                    System.out.println("Error en nueva operación: "+e);
-                }
-                
-            }
-        });
-        
-        this.vista.btnSalir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });*/
     }
     
     public void design() throws SQLException{
@@ -139,6 +91,7 @@ public class ControladorFrmVistaGeneral {
         obtenerDineroTotal();
         designTablaResumenMedios();
     }
+    
     public void frmIniciar() throws SQLException{
         Sistema.actualizar_montos_bd();
         vista.setLocationRelativeTo(null);

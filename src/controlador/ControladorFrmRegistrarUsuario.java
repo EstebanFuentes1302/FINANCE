@@ -9,8 +9,6 @@ import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import vista.FrmLogin;
 import vista.FrmRegistroUsuario;
@@ -61,6 +59,7 @@ public class ControladorFrmRegistrarUsuario {
             }
         });
     }
+    
     public void design(){
         funcionalidades();
     }

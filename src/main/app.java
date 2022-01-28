@@ -32,13 +32,18 @@ public class app {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        
         //TEMA OSCURO
-        /*BasicLookAndFeel darcula = new DarculaLaf();
-        UIManager.setLookAndFeel(darcula);*/
+        BasicLookAndFeel darcula = new DarculaLaf();
+        UIManager.setLookAndFeel(darcula);
         
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        //TEMA DE SISTEMA OPERATIVO
+        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
+        //CONEXION A BASE DE DATOS
         Sistema.conectar();
+        
+        //INICIO DEL FORMULARIO INICIAL
         FrmLogin vista = new FrmLogin();
         ControladorFrmLogin controlador= new ControladorFrmLogin(vista);
     }

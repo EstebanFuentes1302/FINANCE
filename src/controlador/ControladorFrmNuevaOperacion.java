@@ -5,26 +5,15 @@
  */
 package controlador;
 
-import com.mysql.jdbc.Connection;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import general.GeneradorCodigo;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import modelo.Medio;
-import vista.FrmMedio;
 import vista.FrmNuevaOperacion;
 import vista.FrmVistaGeneral;
 
@@ -34,16 +23,6 @@ import vista.FrmVistaGeneral;
  */
 public class ControladorFrmNuevaOperacion {
     private FrmNuevaOperacion vista;
-
-    private static Connection con;
-    private static Statement st;
-    private static ResultSet rs;
-    
-    private static final String driver="com.mysql.jdbc.Driver";
-    private static final String user="esteban";
-    private static final String pass="123";
-    //private static final String url="jdbc:mysql://localhost:3306/ahorros_bd";
-    private static final String url="jdbc:mysql://8.12.17.20:3306/finance_bd";
     
     private int CantidadFilas;
     private int CantidadColumnas;
@@ -54,50 +33,7 @@ public class ControladorFrmNuevaOperacion {
         this.vista=vista;
         frmIniciar();
         ComboBox();
-        conectar();
-        funcionalidades();
-        
-    }
-    
-    public void conectar() throws SQLException {
-        con=null;
-        try{
-            Class.forName(driver);
-            con= (Connection) DriverManager.getConnection(url, user, pass);
-        }
-        catch (ClassNotFoundException | SQLException e){
-            System.out.println("Error de conexion: "+e);
-        }
-    }
-    
-    public void obtenerDatos() throws SQLException{
-        try {
-            conectar();
-            st=con.createStatement();
-            rs=st.executeQuery("SELECT COUNT(*) FROM medio");
-
-            if(rs.next()){
-                    CantidadFilas=rs.getInt("COUNT(*)");
-                }else{
-                    CantidadFilas=0;
-                }
-            rs=st.executeQuery("SELECT * FROM medio");
-            ResultSetMetaData rsMD = rs.getMetaData();
-            
-            CantidadColumnas=rsMD.getColumnCount();
-            
-            while(rs.next()){           
-                System.out.println("a");
-                Medio m = new Medio(rs.getObject(1).toString(), Float.parseFloat(rs.getObject(2).toString()), rs.getObject(3).toString(), rs.getObject(4).toString());
-                Sistema.medios.addMedio(m);
-            }
-            System.out.println("Datos obtenidos");
-        } catch (Exception e) {
-            System.out.println("Error al obtener datos: "+e);
-        }
-        
-        
-        
+        //conectar();
     }
     
     public void ComboBox(){
@@ -109,20 +45,20 @@ public class ControladorFrmNuevaOperacion {
     }
     
     public void afectarUsuario() throws SQLException{
-        conectar();
-        st=con.createStatement();
+        //conectar();
+        Sistema.st=Sistema.con.createStatement();
         float montob=0, montoa=0;
         String selectm="SELECT dinero_total from usuario where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
-        rs=st.executeQuery(selectm);
+        Sistema.rs=Sistema.st.executeQuery(selectm);
         
-        if(rs.next()){
-                montob=rs.getFloat("dinero_total");
+        if(Sistema.rs.next()){
+                montob=Sistema.rs.getFloat("dinero_total");
 
                 montoa=Float.parseFloat(vista.txtMonto.getText())+montob;
 
                 String ex="UPDATE usuario SET dinero_total="+montoa+" WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
                 System.out.println(ex);
-                st.execute(ex);
+                Sistema.st.execute(ex);
                 System.out.println("se afecto al usuario con exito");
                 Sistema.usuarioConectado.setDinero_total(montoa);
                 
@@ -134,21 +70,21 @@ public class ControladorFrmNuevaOperacion {
     public void afectarMedio() throws SQLException{
         
         try {
-            conectar();
-            st=con.createStatement();
+            //conectar();
+            Sistema.st=Sistema.con.createStatement();
             float montob=0, montoa=0;
             
             String selectm="SELECT monto_total from medio where cod_medio='"+vista.cboMedios.getSelectedItem().toString()+"'";
-            rs=st.executeQuery(selectm);
+            Sistema.rs=Sistema.st.executeQuery(selectm);
             
-            if(rs.next()){
-                montob=rs.getFloat("monto_total");
+            if(Sistema.rs.next()){
+                montob=Sistema.rs.getFloat("monto_total");
 
                 montoa=Float.parseFloat(vista.txtMonto.getText())+montob;
 
                 String ex="UPDATE medio SET monto_total="+montoa+" WHERE cod_medio='"+vista.cboMedios.getSelectedItem().toString()+"'";
                 System.out.println(ex);
-                st.execute(ex);
+                Sistema.st.execute(ex);
                 System.out.println("se afecto al medio con exito");                
             }else{
                 System.out.println("error en el result set");
@@ -173,12 +109,12 @@ public class ControladorFrmNuevaOperacion {
     
     public void AñadirOperacion() throws SQLException{
         try {
-            conectar();
+            //conectar();
             String codg=generarCodigoOperacion();
             String result="INSERT INTO operacion VALUES ('"+codg+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+vista.cboMedios.getSelectedItem().toString()+"')";
             System.out.println(result);
-            st=con.createStatement();
-            st.execute(result);
+            Sistema.st=Sistema.con.createStatement();
+            Sistema.st.execute(result);
             
             /*afectarMedio();
             afectarUsuario();*/
@@ -229,7 +165,6 @@ public class ControladorFrmNuevaOperacion {
     }
     
     public void frmIniciar() throws SQLException{
-        obtenerDatos();
         vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }

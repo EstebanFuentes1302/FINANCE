@@ -5,17 +5,13 @@
  */
 package controlador;
 
-import com.mysql.jdbc.Connection;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -31,45 +27,12 @@ import vista.FrmVistaGeneral;
  */
 public class ControladorFrmMedio {
     private FrmMedio vista;
-    private String nombre_medio;
-    
-    private static Connection con;
-    private static Statement st;
-    private static ResultSet rs;
-    
-    private static final String driver="com.mysql.jdbc.Driver";
-    private static final String user="esteban";
-    private static final String pass="123";
-    //private static final String url="jdbc:mysql://localhost:3306/ahorros_bd";
-    private static final String url="jdbc:mysql://8.12.17.20:3306/finance_bd";
-    
-    private int CantidadFilas;
-    private int CantidadColumnas;
-    private int ContadorRegistros;
-    private int UbicacionRegistros;
     
     public ControladorFrmMedio(FrmMedio vista) throws SQLException{
         this.vista=vista;
         frmIniciar();
     }
     
-    public void conectar() throws SQLException {
-        // Reseteamos a null la conexion a la bd
-        con=null;
-        try{
-            Class.forName(driver);
-            // Nos conectamos a la bd
-            con= (Connection) DriverManager.getConnection(url, user, pass);
-            /*if (con!=null){
-                System.out.println("conectado");
-            }*/
-        }
-        // Si la conexion NO fue exitosa mostramos un mensaje de error
-        catch (ClassNotFoundException | SQLException e){
-            System.out.println(e);
-        }
-    }
-
     public void funcionalidades(){
         this.vista.btnRegresar.addActionListener(new ActionListener() {
             @Override
@@ -121,12 +84,12 @@ public class ControladorFrmMedio {
     public void accionComboBox(){
         try {
             DatosTabla();
-            st=con.createStatement();
+            Sistema.st=Sistema.con.createStatement();
             String sql="SELECT cod_medio FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
             System.out.println(sql);
-            rs=st.executeQuery(sql);
-            while(rs.next()){
-                vista.txtCodigoMedio.setText(rs.getString("cod_medio"));
+            Sistema.rs=Sistema.st.executeQuery(sql);
+            while(Sistema.rs.next()){
+                vista.txtCodigoMedio.setText(Sistema.rs.getString("cod_medio"));
                 obtenerDineroMedioTotal();
                 DatosTabla();
             }
@@ -139,20 +102,18 @@ public class ControladorFrmMedio {
     
     private void obtenerDineroMedioTotal(){
         try {
-            //conectar();
-            float mt;
-            st=con.createStatement();
+            Sistema.st=Sistema.con.createStatement();
             ResultSet rs2;
-            rs2 = st.executeQuery("SELECT cod_medio from medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'");
+            rs2 = Sistema.st.executeQuery("SELECT cod_medio from medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'");
             if(rs2.next()){
                 String sql="select monto_total from medio where cod_medio='"+rs2.getString("cod_medio")+"'";
-                rs=st.executeQuery(sql);
-                if(rs.next()){
-                    vista.txtDineroTotal.setText(Sistema.formatFloat(rs.getFloat("monto_total")));
+                Sistema.rs=Sistema.st.executeQuery(sql);
+                if(Sistema.rs.next()){
+                    vista.txtDineroTotal.setText(Sistema.formatFloat(Sistema.rs.getFloat("monto_total")));
                 }
             }
             
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
     }
@@ -165,11 +126,10 @@ public class ControladorFrmMedio {
         modeloT.addColumn("Codigo de medio");
         modeloT.addColumn("Descripcion");
         
-        //conectar();
         PreparedStatement ps=null;
         ResultSet rsT;
         String sql ="SELECT cod_operacion,monto,cod_medio,descripcion FROM operacion WHERE cod_medio='"+vista.txtCodigoMedio.getText()+"'";
-        ps=con.prepareStatement(sql);
+        ps=Sistema.con.prepareStatement(sql);
         rsT=ps.executeQuery();
         
         ResultSetMetaData rsMD = rsT.getMetaData();
@@ -186,21 +146,18 @@ public class ControladorFrmMedio {
         
         
     }
-    
-    
-    
+
     public void ComboBox() throws SQLException{
         DefaultComboBoxModel<String> cboMedios = new DefaultComboBoxModel<String>();
         int cc;
-        //conectar();
-        st=con.createStatement();
-        rs=st.executeQuery("SELECT nombre_medio FROM medio WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
-        ResultSetMetaData rsMD = rs.getMetaData();
+        Sistema.st=Sistema.con.createStatement();
+        Sistema.rs=Sistema.st.executeQuery("SELECT nombre_medio FROM medio WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
+        ResultSetMetaData rsMD = Sistema.rs.getMetaData();
         cc=rsMD.getColumnCount();
-        while(rs.next()){
+        while(Sistema.rs.next()){
             Object[] row = new Object[cc];
             for (int i = 0; i < cc; i++) {
-                cboMedios.addElement(rs.getString("nombre_medio"));
+                cboMedios.addElement(Sistema.rs.getString("nombre_medio"));
             }
         }
         this.vista.cboNombreMedio.setModel(cboMedios);
@@ -212,9 +169,8 @@ public class ControladorFrmMedio {
         accionComboBox();
     }
     
-    public void frmIniciar() throws SQLException{conectar();
+    public void frmIniciar() throws SQLException{
         Sistema.actualizar_montos_bd();
-        conectar();
         design();
         funcionalidades();
         vista.setLocationRelativeTo(null);

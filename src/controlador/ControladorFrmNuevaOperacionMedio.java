@@ -10,8 +10,6 @@ import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import vista.FrmMedio;
 import vista.FrmNuevaOperacionMedio;
@@ -27,13 +25,9 @@ public class ControladorFrmNuevaOperacionMedio {
         this.cod_medio=cod_medio;
         iniciarFrm();
     }
-    
-    
-    
+
     public void funcionalidades() throws SQLException{       
-        
         b=false;
-        System.out.println(b==false);
         vista.btnAgregar.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -41,13 +35,14 @@ public class ControladorFrmNuevaOperacionMedio {
             while (b==false){
                 try {
                     Sistema.st=Sistema.con.createStatement();
-
                     Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"')");
+                    
                     JOptionPane.showMessageDialog(null, "Se agregó la operacion");
                     
                     FrmMedio vistaM = new FrmMedio();
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
                     vista.dispose();
+                    
                     b=true;
                 } catch (SQLException sqle) {
                     System.out.println("Error al agregar: "+sqle);
@@ -81,12 +76,11 @@ public class ControladorFrmNuevaOperacionMedio {
     }
     
     public void iniciarFrm() throws SQLException{
-        
         Sistema.actualizar_montos_bd();
-        
         funcionalidades();
         design();
         vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }
+
 }
