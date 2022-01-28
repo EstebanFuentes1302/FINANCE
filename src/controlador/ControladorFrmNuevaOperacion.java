@@ -22,6 +22,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import modelo.Medio;
 import vista.FrmMedio;
 import vista.FrmNuevaOperacion;
@@ -200,6 +201,7 @@ public class ControladorFrmNuevaOperacion {
             public void actionPerformed(ActionEvent e) {
                 try {
                     AñadirOperacion();
+                    JOptionPane.showMessageDialog(null, "Se agregó la operación");
                 } catch (SQLException ex) {
                     System.out.println(e);
                 }

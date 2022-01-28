@@ -5,7 +5,6 @@
  */
 package controlador;
 
-import general.GeneradorCodigo;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,47 +13,38 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import vista.FrmMedio;
-import vista.FrmNuevaOperacionMedio;
+import vista.FrmNuevoMedio;
 
-public class ControladorFrmNuevaOperacionMedio {
-    private FrmNuevaOperacionMedio vista;
-    private String nombre_medio,cod_medio;
-    boolean b;
-    
-    public ControladorFrmNuevaOperacionMedio(FrmNuevaOperacionMedio vista,String nombre_medio,String cod_medio) throws SQLException {
+/**
+ *
+ * @author Esteban
+ */
+public class ControladorFrmNuevoMedio {
+    private FrmNuevoMedio vista;
+
+    public ControladorFrmNuevoMedio(FrmNuevoMedio vista) throws SQLException {
         this.vista = vista;
-        this.nombre_medio=nombre_medio;
-        this.cod_medio=cod_medio;
         iniciarFrm();
     }
     
-    
-    
-    public void funcionalidades() throws SQLException{       
-        
-        b=false;
-        System.out.println(b==false);
-        vista.btnAgregar.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            boolean b=false;
-            while (b==false){
+    public void funcionalidades(){
+        vista.btnAgregarMedio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 try {
                     Sistema.st=Sistema.con.createStatement();
-
-                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"')");
-                    JOptionPane.showMessageDialog(null, "Se agregó la operacion");
+                    String sql ="INSERT INTO medio VALUES('"+vista.txtCodigoMedio.getText()+"',0,'"+vista.txtNombreMedio.getText()+"','"+vista.txtDescripcion.getText()+"','"+Sistema.usuarioConectado.getNombre_usuario()+"')";
                     
+                    System.out.println(sql);
+                    Sistema.st.execute(sql);
+                    JOptionPane.showMessageDialog(null, "Medio agregado");
                     FrmMedio vistaM = new FrmMedio();
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
                     vista.dispose();
-                    b=true;
-                } catch (SQLException sqle) {
-                    System.out.println("Error al agregar: "+sqle);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "No se pudo agregar medio");
                 }
             }
-            
-        }
         });
         
         vista.btnRegresar.addActionListener(new ActionListener() {
@@ -65,28 +55,21 @@ public class ControladorFrmNuevaOperacionMedio {
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
                     vista.dispose();
                 } catch (SQLException ex) {
-                    System.out.println(ex);
+                    Logger.getLogger(ControladorFrmNuevoMedio.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
             }
         });
-        
-        
-        
-        
     }
     
     public void design(){
-        vista.txtNombreMedio.setText(nombre_medio);
+        
     }
     
     public void iniciarFrm() throws SQLException{
-        
-        Sistema.actualizar_montos_bd();
-        
-        funcionalidades();
-        design();
         vista.setLocationRelativeTo(null);
         vista.setVisible(true);
+        design();
+        funcionalidades();
     }
+    
 }

@@ -16,10 +16,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import vista.FrmMedio;
 import vista.FrmNuevaOperacionMedio;
+import vista.FrmNuevoMedio;
 import vista.FrmVistaGeneral;
 
 /**
@@ -84,38 +87,55 @@ public class ControladorFrmMedio {
         this.vista.btnNuevaOperacion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FrmNuevaOperacionMedio vista2 = new FrmNuevaOperacionMedio();
-                ControladorFrmNuevaOperacionMedio controlador2 = new ControladorFrmNuevaOperacionMedio(vista2,vista.cboNombreMedio.getSelectedItem().toString(),vista.txtCodigoMedio.getText());
-                controlador2.iniciarFrm();
+                try {
+                    FrmNuevaOperacionMedio vista2 = new FrmNuevaOperacionMedio();
+                    ControladorFrmNuevaOperacionMedio controlador2 = new ControladorFrmNuevaOperacionMedio(vista2,vista.cboNombreMedio.getSelectedItem().toString(),vista.txtCodigoMedio.getText());
+                    vista.dispose();
+                } catch (SQLException ex) {
+                    System.out.println(e);
+                }
             }
         });
         
         this.vista.cboNombreMedio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                accionComboBox();
+            }
+        });
+        
+        vista.btnNuevoMedio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 try {
-                    //conectar();
-                    DatosTabla();
-                    
-                    st=con.createStatement();
-                    String sql="SELECT cod_medio FROM MEDIO WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
-                    System.out.println(sql);
-                    rs=st.executeQuery(sql);
-                    while(rs.next()){
-                        vista.txtCodigoMedio.setText(rs.getString("cod_medio"));
-                        obtenerDineroMedioTotal();
-                        DatosTabla();
-                    }
-                    vista.btnNuevaOperacion.setEnabled(true);
-                    
+                    FrmNuevoMedio vistaNM = new FrmNuevoMedio();
+                    ControladorFrmNuevoMedio controladorNM = new ControladorFrmNuevoMedio(vistaNM);
+                    vista.dispose();
                 } catch (SQLException ex) {
-                    System.out.println(e);
+                    Logger.getLogger(ControladorFrmMedio.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
     }
     
-    
+    public void accionComboBox(){
+        try {
+            DatosTabla();
+            st=con.createStatement();
+            String sql="SELECT cod_medio FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
+            System.out.println(sql);
+            rs=st.executeQuery(sql);
+            while(rs.next()){
+                vista.txtCodigoMedio.setText(rs.getString("cod_medio"));
+                obtenerDineroMedioTotal();
+                DatosTabla();
+            }
+            vista.btnNuevaOperacion.setEnabled(true);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
     
     private void obtenerDineroMedioTotal(){
         try {
@@ -189,6 +209,7 @@ public class ControladorFrmMedio {
     private void design() throws SQLException{
         vista.btnNuevaOperacion.setEnabled(false);
         ComboBox();
+        accionComboBox();
     }
     
     public void frmIniciar() throws SQLException{conectar();

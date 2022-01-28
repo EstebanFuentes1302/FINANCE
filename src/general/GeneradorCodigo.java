@@ -38,7 +38,6 @@ public class GeneradorCodigo {
     }
     
     private static String Shuffle(String s){
-        System.out.println("antes de: "+s);
         String[] arrayS=s.split("");
         Collections.shuffle(Arrays.asList(arrayS));
         s="";
@@ -46,7 +45,6 @@ public class GeneradorCodigo {
         for (int i = 0; i < arrayS.length; i++) {
             s+=arrayS[i];
         }
-        System.out.println(s);
         return s;
     }
 }
