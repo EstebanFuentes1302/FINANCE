@@ -22,15 +22,20 @@ public class app {
 
     /**
      * @param args the command line arguments
+     * @throws java.sql.SQLException
+     * @throws javax.swing.UnsupportedLookAndFeelException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InstantiationException
+     * @throws java.lang.IllegalAccessException
      */
     public static void main(String[] args) throws SQLException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         
         //TEMA OSCURO
-        BasicLookAndFeel darcula = new DarculaLaf();
-        UIManager.setLookAndFeel(darcula);
+        /*BasicLookAndFeel darcula = new DarculaLaf();
+        UIManager.setLookAndFeel(darcula);*/
         
         //TEMA DE SISTEMA OPERATIVO
-        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
         //CONEXION A BASE DE DATOS
         Sistema.conectar();
@@ -38,6 +43,8 @@ public class app {
         //INICIO DEL FORMULARIO INICIAL
         FrmLogin vista = new FrmLogin();
         ControladorFrmLogin controlador= new ControladorFrmLogin(vista);
+        
+
     }
     
 }
