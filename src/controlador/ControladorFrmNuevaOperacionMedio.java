@@ -9,6 +9,7 @@ import general.GeneradorCodigo;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import vista.FrmMedio;
@@ -35,7 +36,8 @@ public class ControladorFrmNuevaOperacionMedio {
             while (b==false){
                 try {
                     Sistema.st=Sistema.con.createStatement();
-                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"')");
+                    ResultSet rs = Sistema.st.executeQuery("SELECT SYSDATE()");
+                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"','"+rs.getString("sysdate()")+")");
                     
                     JOptionPane.showMessageDialog(null, "Se agregó la operacion");
                     

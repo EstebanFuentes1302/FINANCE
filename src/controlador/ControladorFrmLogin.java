@@ -37,6 +37,7 @@ public class ControladorFrmLogin {
             if(vista.txtPassword.getText().equals(Sistema.rs.getString("password"))){
                 System.out.println(Sistema.rs.getString("dinero_total"));
                 Sistema.usuarioConectado=new Usuario(Sistema.rs.getString("nombre_usuario"), Sistema.rs.getString("password"),Sistema.rs.getFloat("dinero_total"));
+                Sistema.usuarioConectado.setConectado(true);
                 JOptionPane.showMessageDialog(null, "Ingreso exitoso");
                 return true;
             }

@@ -20,9 +20,15 @@ public class GeneradorCodigo {
     public static String generarCodigoOperacion(){
         String codigo="";
         codigo=aleatorio(codigo, Mayusculas, 4);
-        //codigo=aleatorio(codigo, Minusculas, cantidadMinusculas);
         codigo=aleatorio(codigo, Numeros, 4);
-        //codigo=aleatorio(codigo, caracteresEsp, cantidadEspeciales);
+        codigo=Shuffle(codigo);
+        return codigo;
+    }
+    
+    public static String generarCodigoMedio(){
+        String codigo="";
+        codigo=aleatorio(codigo, Mayusculas, 5);
+        codigo=aleatorio(codigo, Numeros, 3);
         codigo=Shuffle(codigo);
         return codigo;
     }

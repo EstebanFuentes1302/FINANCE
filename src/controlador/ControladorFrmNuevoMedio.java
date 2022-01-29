@@ -5,6 +5,7 @@
  */
 package controlador;
 
+import general.GeneradorCodigo;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,19 +32,26 @@ public class ControladorFrmNuevoMedio {
         vista.btnAgregarMedio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+                boolean b=false;
+                while(b==false){
+                    try {
                     Sistema.st=Sistema.con.createStatement();
-                    String sql ="INSERT INTO medio VALUES('"+vista.txtCodigoMedio.getText()+"',0,'"+vista.txtNombreMedio.getText()+"','"+vista.txtDescripcion.getText()+"','"+Sistema.usuarioConectado.getNombre_usuario()+"')";
+                    String sql ="INSERT INTO medio VALUES('"+GeneradorCodigo.generarCodigoMedio()+"',0,'"+vista.txtNombreMedio.getText()+"','"+vista.txtDescripcion.getText()+"','"+Sistema.usuarioConectado.getNombre_usuario()+"')";
                     
                     System.out.println(sql);
                     Sistema.st.execute(sql);
+                    b=true;
+                    
                     JOptionPane.showMessageDialog(null, "Medio agregado");
                     FrmMedio vistaM = new FrmMedio();
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
                     vista.dispose();
+                    
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(null, "No se pudo agregar medio");
                 }
+                }
+                
             }
         });
         

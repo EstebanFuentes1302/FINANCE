@@ -12,7 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import vista.FrmLogin;
 import vista.FrmMedio;
 import vista.FrmVistaGeneral;
 
@@ -81,6 +85,23 @@ public class ControladorFrmVistaGeneral {
                     vista.dispose();
                 } catch (SQLException ex) {
                     System.out.println(e);
+                }
+            }
+        });
+        
+        vista.btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Sistema.st=Sistema.con.createStatement();
+                    Sistema.st.execute("update usuario set conectado=false where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
+                    vista.dispose();
+                    JOptionPane.showMessageDialog(null, "Desconectado");
+                    FrmLogin vistaL = new FrmLogin();
+                    ControladorFrmLogin controladorL = new ControladorFrmLogin(vistaL);
+                    vista.dispose();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ControladorFrmVistaGeneral.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

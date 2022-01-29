@@ -13,6 +13,7 @@ public class Usuario {
     private String nombre_usuario;
     private String password;
     private float dinero_total;
+    private boolean conectado;
 
     public Usuario(String nombre_usuario, String password, float dinero_total) {
         this.nombre_usuario = nombre_usuario;
@@ -20,6 +21,14 @@ public class Usuario {
         this.dinero_total=dinero_total;
     }
 
+    public boolean isConectado() {
+        return conectado;
+    }
+
+    public void setConectado(boolean conectado) {
+        this.conectado = conectado;
+    }
+    
     public String getNombre_usuario() {
         return nombre_usuario;
     }
