@@ -6,16 +6,20 @@
 package controlador;
 
 import general.Sistema;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import sun.swing.table.DefaultTableCellHeaderRenderer;
 import vista.FrmLogin;
 import vista.FrmMedio;
 import vista.FrmVistaGeneral;
@@ -46,7 +50,27 @@ public class ControladorFrmVistaGeneral {
         }
     }
     
-    private void designTablaResumenMedios() throws SQLException{
+    private void designTabla(){
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        
+        
+        TableColumnModel modelo;
+        modelo=vista.tblResumenMedios.getColumnModel();
+        
+        modelo.getColumn(2).setPreferredWidth(10);
+        
+        int cc= modelo.getColumnCount();
+        for (int i = 0; i < cc; i++) {
+            modelo.getColumn(i).setCellRenderer(centerRenderer);
+        }
+        
+        vista.tblResumenMedios.setRowHeight(30);
+        vista.tblResumenMedios.getTableHeader().setPreferredSize(new Dimension(20,20));
+    }
+    
+    private void datosTablaResumenMedios() throws SQLException{
         DefaultTableModel modeloT = new DefaultTableModel();
         vista.tblResumenMedios.setModel(modeloT);
         modeloT.addColumn("Codigo de medio");
@@ -72,6 +96,8 @@ public class ControladorFrmVistaGeneral {
             }
             modeloT.addRow(row);
         }
+        
+        designTabla();
     }
     
     public void funcionalidades(){
@@ -101,7 +127,7 @@ public class ControladorFrmVistaGeneral {
                     ControladorFrmLogin controladorL = new ControladorFrmLogin(vistaL);
                     vista.dispose();
                 } catch (SQLException ex) {
-                    Logger.getLogger(ControladorFrmVistaGeneral.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex);
                 }
             }
         });
@@ -110,7 +136,7 @@ public class ControladorFrmVistaGeneral {
     public void design() throws SQLException{
         vista.txtNombreUsuario.setText(Sistema.usuarioConectado.getNombre_usuario());
         obtenerDineroTotal();
-        designTablaResumenMedios();
+        datosTablaResumenMedios();
     }
     
     public void frmIniciar() throws SQLException{

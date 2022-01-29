@@ -9,11 +9,9 @@ import general.GeneradorCodigo;
 import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import modelo.Medio;
 import vista.FrmNuevaOperacion;
 import vista.FrmVistaGeneral;
 
@@ -33,7 +31,6 @@ public class ControladorFrmNuevaOperacion {
         this.vista=vista;
         frmIniciar();
         ComboBox();
-        //conectar();
     }
     
     public void ComboBox(){
@@ -45,7 +42,6 @@ public class ControladorFrmNuevaOperacion {
     }
     
     public void afectarUsuario() throws SQLException{
-        //conectar();
         Sistema.st=Sistema.con.createStatement();
         float montob=0, montoa=0;
         String selectm="SELECT dinero_total from usuario where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
@@ -57,9 +53,7 @@ public class ControladorFrmNuevaOperacion {
                 montoa=Float.parseFloat(vista.txtMonto.getText())+montob;
 
                 String ex="UPDATE usuario SET dinero_total="+montoa+" WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
-                System.out.println(ex);
                 Sistema.st.execute(ex);
-                System.out.println("se afecto al usuario con exito");
                 Sistema.usuarioConectado.setDinero_total(montoa);
                 
             }else{
@@ -83,9 +77,7 @@ public class ControladorFrmNuevaOperacion {
                 montoa=Float.parseFloat(vista.txtMonto.getText())+montob;
 
                 String ex="UPDATE medio SET monto_total="+montoa+" WHERE cod_medio='"+vista.cboMedios.getSelectedItem().toString()+"'";
-                System.out.println(ex);
-                Sistema.st.execute(ex);
-                System.out.println("se afecto al medio con exito");                
+                Sistema.st.execute(ex);             
             }else{
                 System.out.println("error en el result set");
             }
@@ -112,7 +104,6 @@ public class ControladorFrmNuevaOperacion {
             //conectar();
             String codg=generarCodigoOperacion();
             String result="INSERT INTO operacion VALUES ('"+codg+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+vista.cboMedios.getSelectedItem().toString()+"')";
-            System.out.println(result);
             Sistema.st=Sistema.con.createStatement();
             Sistema.st.execute(result);
             
@@ -120,7 +111,6 @@ public class ControladorFrmNuevaOperacion {
             afectarUsuario();*/
             
             Sistema.actualizar_montos_bd();
-            System.out.println("Se añadió");
             
             FrmVistaGeneral vistaG = new FrmVistaGeneral();
             ControladorFrmVistaGeneral controladorG = new ControladorFrmVistaGeneral(vistaG);
@@ -156,12 +146,6 @@ public class ControladorFrmNuevaOperacion {
             }
         });
         
-        /*this.vista.cboMedios.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vista.txtNombreMedio.setText("Nombre: "+Sistema.obtenerNombrexCodigo(vista.cboMedios.getSelectedItem().toString()));
-            }
-        });*/
     }
     
     public void frmIniciar() throws SQLException{

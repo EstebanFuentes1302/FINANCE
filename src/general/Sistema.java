@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import modelo.MedioArreglo;
 import modelo.OperacionArreglo;
 import modelo.Usuario;
@@ -64,17 +66,14 @@ public class Sistema {
             rs=st.executeQuery("SELECT cod_medio FROM medio WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
             while(rs.next()){
                 st=con.createStatement();
-                System.out.println("BUCLEEEEEEEEEEEE");
+
                 //SUMA VALORES PARA LOS MEDIOS
                 String sql="update medio set monto_total=((select distinct ifnull((select sum(monto) from operacion where cod_medio='"+rs.getString("cod_medio")+"'),0) from (select * from medio) as b where cod_medio='"+rs.getString("cod_medio")+"')) where cod_medio='"+rs.getString("cod_medio")+"'";
                 String sql2="update usuario set dinero_total=((select distinct ifnull((select sum(monto_total) from medio where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"'),0) from (select * from usuario) as u where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"')) where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"'";
                 
-                System.out.println(sql);
-                System.out.println(sql2);
-                
                 st.execute(sql);
                 st.execute(sql2);
-                System.out.println("BUCLEEEEEEEEEEEE");
+
             }
             
         } catch (Exception e) {
@@ -82,6 +81,12 @@ public class Sistema {
         }
 
         
+    }
+    
+    public static String getNow(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
     }
     
 }

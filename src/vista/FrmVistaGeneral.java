@@ -96,12 +96,12 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
         jLabel4.setText("Usuario");
 
         txtNombreUsuario.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
-        txtNombreUsuario.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        txtNombreUsuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtNombreUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtNombreUsuario.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txtDineroTotal.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
-        txtDineroTotal.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        txtDineroTotal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtDineroTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtDineroTotal.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout PanelMidLayout = new javax.swing.GroupLayout(PanelMid);
         PanelMid.setLayout(PanelMidLayout);
@@ -130,7 +130,7 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
                         .addComponent(jLabel4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDineroTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                    .addComponent(txtDineroTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(txtNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -150,19 +150,23 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblResumenMedios);
 
-        jLabel3.setFont(new java.awt.Font("Coolvetica Rg", 1, 18)); // NOI18N
-        jLabel3.setText("Resumen");
+        jLabel3.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
+        jLabel3.setText("Resumen de medios");
 
         javax.swing.GroupLayout PanelMid2Layout = new javax.swing.GroupLayout(PanelMid2);
         PanelMid2.setLayout(PanelMid2Layout);
         PanelMid2Layout.setHorizontalGroup(
             PanelMid2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelMid2Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(PanelMid2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
-                    .addComponent(jLabel3)
-                    .addComponent(jSeparator1))
+                .addGroup(PanelMid2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelMid2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(PanelMid2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+                            .addComponent(jSeparator1)))
+                    .addGroup(PanelMid2Layout.createSequentialGroup()
+                        .addGap(169, 169, 169)
+                        .addComponent(jLabel3)))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
         PanelMid2Layout.setVerticalGroup(

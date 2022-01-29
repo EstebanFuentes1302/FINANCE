@@ -37,7 +37,7 @@ public class ControladorFrmNuevaOperacionMedio {
                 try {
                     Sistema.st=Sistema.con.createStatement();
                     ResultSet rs = Sistema.st.executeQuery("SELECT SYSDATE()");
-                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"','"+rs.getString("sysdate()")+")");
+                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"','"+Sistema.getNow()+"')");
                     
                     JOptionPane.showMessageDialog(null, "Se agregó la operacion");
                     

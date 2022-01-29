@@ -6,6 +6,7 @@
 package controlador;
 
 import general.Sistema;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
@@ -15,7 +16,10 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import vista.FrmMedio;
 import vista.FrmNuevaOperacionMedio;
 import vista.FrmNuevoMedio;
@@ -83,15 +87,14 @@ public class ControladorFrmMedio {
     
     public void accionComboBox(){
         try {
-            DatosTabla();
+            datosTabla();
             Sistema.st=Sistema.con.createStatement();
             String sql="SELECT cod_medio FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
-            System.out.println(sql);
             Sistema.rs=Sistema.st.executeQuery(sql);
             while(Sistema.rs.next()){
                 vista.txtCodigoMedio.setText(Sistema.rs.getString("cod_medio"));
                 obtenerDineroMedioTotal();
-                DatosTabla();
+                datosTabla();
             }
             vista.btnNuevaOperacion.setEnabled(true);
 
@@ -118,17 +121,18 @@ public class ControladorFrmMedio {
         }
     }
     
-    public void DatosTabla() throws SQLException{
+    private void datosTabla() throws SQLException{
         DefaultTableModel modeloT = new DefaultTableModel();
         vista.tblOperaciones.setModel(modeloT);
         modeloT.addColumn("Codigo");
         modeloT.addColumn("Monto");
-        modeloT.addColumn("Codigo de medio");
+        modeloT.addColumn("Fecha");
         modeloT.addColumn("Descripcion");
+        
         
         PreparedStatement ps=null;
         ResultSet rsT;
-        String sql ="SELECT cod_operacion,monto,cod_medio,descripcion FROM operacion WHERE cod_medio='"+vista.txtCodigoMedio.getText()+"'";
+        String sql ="SELECT cod_operacion,monto,fecha as date,descripcion FROM operacion WHERE cod_medio='"+vista.txtCodigoMedio.getText()+"' order by date desc";
         ps=Sistema.con.prepareStatement(sql);
         rsT=ps.executeQuery();
         
@@ -143,8 +147,25 @@ public class ControladorFrmMedio {
             }
             modeloT.addRow(row);
         }
+        designTabla();
+    }
+    
+     private void designTabla(){
+        vista.tblOperaciones.setRowHeight(30);
+        vista.tblOperaciones.getTableHeader().setPreferredSize(new Dimension(20,20));
+        TableColumnModel modelo = vista.tblOperaciones.getColumnModel();
+        
+         
+        modelo.getColumn(0).setPreferredWidth(20);
+        modelo.getColumn(1).setPreferredWidth(10);
         
         
+         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+         int cc = modelo.getColumnCount();
+         for (int i = 0; i < cc; i++) {
+             modelo.getColumn(i).setCellRenderer(centerRenderer);
+         }
     }
 
     public void ComboBox() throws SQLException{

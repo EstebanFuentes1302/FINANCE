@@ -33,7 +33,6 @@ public class ControladorFrmRegistrarUsuario {
                 try {
                     Sistema.st=Sistema.con.createStatement();
                     String sql="INSERT INTO usuario VALUES('"+vista.txtNombreUsuario1.getText()+"','"+vista.txtPassword.getText()+"',0)";
-                    System.out.println(sql);
                     Sistema.st.execute(sql);
                     
                     FrmLogin vistaL = new FrmLogin();

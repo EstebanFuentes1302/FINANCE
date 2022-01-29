@@ -35,7 +35,6 @@ public class ControladorFrmLogin {
         Sistema.rs=Sistema.st.executeQuery("SELECT * from usuario where nombre_usuario='"+vista.txtUsuario.getText()+"'");
         if(Sistema.rs.next()){
             if(vista.txtPassword.getText().equals(Sistema.rs.getString("password"))){
-                System.out.println(Sistema.rs.getString("dinero_total"));
                 Sistema.usuarioConectado=new Usuario(Sistema.rs.getString("nombre_usuario"), Sistema.rs.getString("password"),Sistema.rs.getFloat("dinero_total"));
                 Sistema.usuarioConectado.setConectado(true);
                 JOptionPane.showMessageDialog(null, "Ingreso exitoso");
