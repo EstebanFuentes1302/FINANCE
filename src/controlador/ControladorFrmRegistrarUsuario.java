@@ -32,9 +32,10 @@ public class ControladorFrmRegistrarUsuario {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Sistema.st=Sistema.con.createStatement();
-                    String sql="INSERT INTO usuario VALUES('"+vista.txtNombreUsuario1.getText()+"','"+vista.txtPassword.getText()+"',0)";
+                    String sql="INSERT INTO usuario VALUES('"+vista.txtNombreUsuario1.getText()+"','"+vista.txtPassword.getText()+"',0,false)";
                     Sistema.st.execute(sql);
                     
+                    JOptionPane.showMessageDialog(null, "Usuario Registrado!");
                     FrmLogin vistaL = new FrmLogin();
                     ControladorFrmLogin controladorL = new ControladorFrmLogin(vistaL);
                     vista.dispose();
