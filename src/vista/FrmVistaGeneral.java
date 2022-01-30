@@ -48,11 +48,17 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
 
         PanelTop.setBackground(new java.awt.Color(51, 51, 51));
 
-        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/logout_icon2.png"))); // NOI18N
+        btnSalir.setBackground(new java.awt.Color(102, 102, 102));
+        btnSalir.setForeground(new java.awt.Color(204, 204, 204));
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/logout_icon2_blanco.png"))); // NOI18N
         btnSalir.setText("Logout");
+        btnSalir.setBorder(null);
 
+        btnMedios.setBackground(new java.awt.Color(102, 102, 102));
+        btnMedios.setForeground(new java.awt.Color(204, 204, 204));
         btnMedios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/wallet2_icon_2.png"))); // NOI18N
         btnMedios.setText("Mis Medios");
+        btnMedios.setBorder(null);
 
         jLabel5.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(204, 204, 204));
@@ -70,11 +76,11 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
-                .addComponent(btnMedios)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                .addComponent(btnMedios, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSalir)
-                .addGap(17, 17, 17))
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         PanelTopLayout.setVerticalGroup(
             PanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,15 +101,19 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
 
         getContentPane().add(PanelTop, java.awt.BorderLayout.NORTH);
 
+        jLabel2.setForeground(new java.awt.Color(51, 51, 51));
         jLabel2.setText("Dinero Total");
 
+        jLabel4.setForeground(new java.awt.Color(51, 51, 51));
         jLabel4.setText("Usuario");
 
         txtNombreUsuario.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
+        txtNombreUsuario.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtNombreUsuario.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txtDineroTotal.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
+        txtDineroTotal.setForeground(new java.awt.Color(51, 51, 51));
         txtDineroTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtDineroTotal.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -115,23 +125,20 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                    .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
                 .addGroup(PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(txtDineroTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29))
+                    .addComponent(txtDineroTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         PanelMidLayout.setVerticalGroup(
             PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelMidLayout.createSequentialGroup()
-                .addGroup(PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelMidLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelMidLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4)))
+                .addGap(19, 19, 19)
+                .addGroup(PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelMidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtDineroTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
@@ -155,6 +162,7 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblResumenMedios);
 
         jLabel3.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(51, 51, 51));
         jLabel3.setText("Resumen de medios");
 
         javax.swing.GroupLayout PanelMid2Layout = new javax.swing.GroupLayout(PanelMid2);
@@ -169,7 +177,7 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
                             .addComponent(jSeparator1)))
                     .addGroup(PanelMid2Layout.createSequentialGroup()
-                        .addGap(169, 169, 169)
+                        .addGap(157, 157, 157)
                         .addComponent(jLabel3)))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
