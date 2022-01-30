@@ -55,8 +55,10 @@ public class FrmVistaGeneral extends javax.swing.JFrame {
         btnMedios.setText("Mis Medios");
 
         jLabel5.setFont(new java.awt.Font("Coolvetica Rg", 1, 24)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5.setText("Finance");
 
+        jLabel1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1.setText("BETA");
 
         javax.swing.GroupLayout PanelTopLayout = new javax.swing.GroupLayout(PanelTop);
