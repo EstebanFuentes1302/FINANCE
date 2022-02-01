@@ -9,7 +9,10 @@ import general.Sistema;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 import modelo.Usuario;
 import vista.FrmLogin;
 import vista.FrmRegistroUsuario;
@@ -37,7 +40,9 @@ public class ControladorFrmLogin {
             if(vista.txtPassword.getText().equals(Sistema.rs.getString("password"))){
                 Sistema.usuarioConectado=new Usuario(Sistema.rs.getString("nombre_usuario"), Sistema.rs.getString("password"),Sistema.rs.getFloat("dinero_total"));
                 Sistema.usuarioConectado.setConectado(true);
-                JOptionPane.showMessageDialog(null, "Ingreso exitoso");
+                Statement st = Sistema.con.createStatement();
+                st.execute("update usuario set conectado=true where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
+
                 return true;
             }
         }else{
@@ -78,8 +83,15 @@ public class ControladorFrmLogin {
         });
     }
     
-    public void frmIniciar() throws SQLException{
+    public void design(){
+        //DEFAULT BUTTON (ENTER)
+        JRootPane jroot = SwingUtilities.getRootPane(vista.btnIngresar);
+        jroot.setDefaultButton(vista.btnIngresar);
         
+    }
+    
+    public void frmIniciar() throws SQLException{
+        design();
         vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }

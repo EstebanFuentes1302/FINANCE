@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import modelo.MedioArreglo;
@@ -38,8 +39,11 @@ public class Sistema {
     
     
     public static String formatFloat(float f){
-        return String.format("%.2f", f);
+        DecimalFormat formatter  = new DecimalFormat("#,##0.00");
+        return formatter.format(f);
     }
+    
+    
     
     public static void conectar() throws SQLException {
         // Reseteamos a null la conexion a la bd
@@ -69,13 +73,13 @@ public class Sistema {
 
                 //SUMA VALORES PARA LOS MEDIOS
                 String sql="update medio set monto_total=((select distinct ifnull((select sum(monto) from operacion where cod_medio='"+rs.getString("cod_medio")+"'),0) from (select * from medio) as b where cod_medio='"+rs.getString("cod_medio")+"')) where cod_medio='"+rs.getString("cod_medio")+"'";
-                String sql2="update usuario set dinero_total=((select distinct ifnull((select sum(monto_total) from medio where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"'),0) from (select * from usuario) as u where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"')) where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"'";
                 
                 st.execute(sql);
-                st.execute(sql2);
+                
 
             }
-            
+            String sql2="update usuario set dinero_total=((select distinct ifnull((select sum(monto_total) from medio where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"'),0) from (select * from usuario) as u where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"')) where nombre_usuario='"+usuarioConectado.getNombre_usuario()+"'";
+            st.execute(sql2);
         } catch (Exception e) {
             System.out.println("en actualizar: "+e);
         }

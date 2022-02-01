@@ -79,6 +79,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
         btnIngresar.setText("Ingresar");
 
+        txtPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPassword.setMinimumSize(new java.awt.Dimension(14, 24));
         txtPassword.setPreferredSize(new java.awt.Dimension(14, 24));
 
@@ -86,6 +87,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
         jLabel2.setText("Usuario");
 
+        txtUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsuarioActionPerformed(evt);
@@ -171,10 +173,7 @@ public class FrmLogin extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(btnRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.SOUTH);

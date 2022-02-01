@@ -12,18 +12,19 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import modelo.Medio;
 import vista.FrmMedio;
 import vista.FrmNuevaOperacionMedio;
 
 public class ControladorFrmNuevaOperacionMedio {
     private FrmNuevaOperacionMedio vista;
-    private String nombre_medio,cod_medio;
+    private Medio m;
     boolean b;
     
-    public ControladorFrmNuevaOperacionMedio(FrmNuevaOperacionMedio vista,String nombre_medio,String cod_medio) throws SQLException {
+    public ControladorFrmNuevaOperacionMedio(FrmNuevaOperacionMedio vista,Medio m) throws SQLException {
         this.vista = vista;
-        this.nombre_medio=nombre_medio;
-        this.cod_medio=cod_medio;
+        this.m=new Medio(m.getCod_medio(),m.getCod_medio(),m.getMoneda());
+        
         iniciarFrm();
     }
 
@@ -37,14 +38,12 @@ public class ControladorFrmNuevaOperacionMedio {
                 try {
                     Sistema.st=Sistema.con.createStatement();
                     ResultSet rs = Sistema.st.executeQuery("SELECT SYSDATE()");
-                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+cod_medio+"','"+Sistema.getNow()+"')");
+                    Sistema.st.execute("INSERT INTO operacion VALUES('"+GeneradorCodigo.generarCodigoOperacion()+"',"+vista.txtMonto.getText()+",'"+vista.txtDescripcion.getText()+"','"+m.getCod_medio()+"','"+Sistema.getNow()+"')");
                     
                     JOptionPane.showMessageDialog(null, "Se agregó la operacion");
                     
                     FrmMedio vistaM = new FrmMedio();
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
-                    vista.dispose();
-                    
                     b=true;
                 } catch (SQLException sqle) {
                     System.out.println("Error al agregar: "+sqle);
@@ -74,7 +73,9 @@ public class ControladorFrmNuevaOperacionMedio {
     }
     
     public void design(){
-        vista.txtNombreMedio.setText(nombre_medio);
+        vista.txtNombreMedio.setText(m.getCod_medio());
+        vista.txtMoneda.setText(m.getMoneda());
+        
     }
     
     public void iniciarFrm() throws SQLException{

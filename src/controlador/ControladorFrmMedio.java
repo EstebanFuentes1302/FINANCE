@@ -17,9 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import modelo.Medio;
 import vista.FrmMedio;
 import vista.FrmNuevaOperacionMedio;
 import vista.FrmNuevoMedio;
@@ -56,7 +58,7 @@ public class ControladorFrmMedio {
             public void actionPerformed(ActionEvent e) {
                 try {
                     FrmNuevaOperacionMedio vista2 = new FrmNuevaOperacionMedio();
-                    ControladorFrmNuevaOperacionMedio controlador2 = new ControladorFrmNuevaOperacionMedio(vista2,vista.cboNombreMedio.getSelectedItem().toString(),vista.txtCodigoMedio.getText());
+                    ControladorFrmNuevaOperacionMedio controlador2 = new ControladorFrmNuevaOperacionMedio(vista2,new Medio(vista.txtCodigoMedio.getText(), vista.cboNombreMedio.getSelectedItem().toString(), vista.txtMoneda.getText()));
                     vista.dispose();
                 } catch (SQLException ex) {
                     System.out.println(e);
@@ -83,20 +85,47 @@ public class ControladorFrmMedio {
                 }
             }
         });
+        
+        this.vista.btnInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Sistema.st=Sistema.con.createStatement();
+                    String sql = "select descripcion from medio where cod_medio='"+vista.txtCodigoMedio.getText()+"'"; 
+                    
+                    Sistema.rs=Sistema.st.executeQuery(sql);
+                    if(Sistema.rs.next()){
+                        JOptionPane.showMessageDialog(null, Sistema.rs.getString("descripcion"),"Información de Medio",JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    
+                } catch (SQLException ex) {
+                    System.out.println("Error en la info: "+e);
+                }
+            }
+        });
     }
     
     public void accionComboBox(){
         try {
-            datosTabla();
-            Sistema.st=Sistema.con.createStatement();
-            String sql="SELECT cod_medio FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
-            Sistema.rs=Sistema.st.executeQuery(sql);
-            while(Sistema.rs.next()){
-                vista.txtCodigoMedio.setText(Sistema.rs.getString("cod_medio"));
-                obtenerDineroMedioTotal();
+            if(vista.cboNombreMedio.getSelectedItem()!=null){
                 datosTabla();
+            
+                Sistema.st=Sistema.con.createStatement();
+                String sql="SELECT cod_medio,cod_moneda FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
+                Sistema.rs=Sistema.st.executeQuery(sql);
+
+                while(Sistema.rs.next()){
+                    vista.txtCodigoMedio.setText(Sistema.rs.getString("cod_medio"));
+                    vista.txtMoneda.setText(Sistema.rs.getString("cod_moneda"));
+                    obtenerDineroMedioTotal();
+                    datosTabla();
+                }
+                vista.btnNuevaOperacion.setEnabled(true);
+                vista.btnInfo.setEnabled(true);
+            }else{
+                System.out.println("A");
             }
-            vista.btnNuevaOperacion.setEnabled(true);
+            
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -109,10 +138,10 @@ public class ControladorFrmMedio {
             ResultSet rs2;
             rs2 = Sistema.st.executeQuery("SELECT cod_medio from medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'");
             if(rs2.next()){
-                String sql="select monto_total from medio where cod_medio='"+rs2.getString("cod_medio")+"'";
+                String sql="select cod_moneda,monto_total from medio where cod_medio='"+rs2.getString("cod_medio")+"'";
                 Sistema.rs=Sistema.st.executeQuery(sql);
                 if(Sistema.rs.next()){
-                    vista.txtDineroTotal.setText(Sistema.formatFloat(Sistema.rs.getFloat("monto_total")));
+                    vista.txtDineroTotal.setText(Sistema.rs.getString("cod_moneda")+" "+Sistema.formatFloat(Sistema.rs.getFloat("monto_total")));
                 }
             }
             
@@ -152,7 +181,7 @@ public class ControladorFrmMedio {
     
      private void designTabla(){
         vista.tblOperaciones.setRowHeight(30);
-        vista.tblOperaciones.getTableHeader().setPreferredSize(new Dimension(20,20));
+        vista.tblOperaciones.getTableHeader().setPreferredSize(new Dimension(20,25));
         TableColumnModel modelo = vista.tblOperaciones.getColumnModel();
         
          
@@ -186,6 +215,9 @@ public class ControladorFrmMedio {
     
     private void design() throws SQLException{
         vista.btnNuevaOperacion.setEnabled(false);
+        vista.btnNuevaOperacion.setEnabled(false);
+        
+        
         ComboBox();
         accionComboBox();
     }

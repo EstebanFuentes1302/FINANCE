@@ -14,6 +14,16 @@ public class Medio {
     private float monto_total;
     private String nombre_medio;
     private String descripcion;
+    private String moneda;
+
+    public Medio() {
+    }
+
+    public Medio(String cod_medio, String nombre_medio, String moneda) {
+        this.cod_medio = cod_medio;
+        this.nombre_medio = nombre_medio;
+        this.moneda = moneda;
+    }
 
     
 
@@ -28,6 +38,22 @@ public class Medio {
         return cod_medio;
     }
 
+    public void setCod_medio(String cod_medio) {
+        this.cod_medio = cod_medio;
+    }
+
+    public void setNombre_medio(String nombre_medio) {
+        this.nombre_medio = nombre_medio;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+
     public void setMonto_total(float monto_total) {
         this.monto_total = monto_total;
     }
@@ -38,6 +64,10 @@ public class Medio {
 
     public String getNombre_medio() {
         return nombre_medio;
+    }
+
+    public String getMoneda() {
+        return moneda;
     }
 
     public String getDescripcion() {

@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -36,73 +37,137 @@ public class ControladorFrmVistaGeneral {
         funcionalidades();
     }
     
-    private void obtenerDineroTotal() throws SQLException{
-        try {
-            //conectar();
-            Sistema.st=Sistema.con.createStatement();
-            Sistema.rs=Sistema.st.executeQuery("SELECT dinero_total FROM usuario WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'");
-            if(Sistema.rs.next()){
-                vista.txtDineroTotal.setText(String.format("%.2f", Sistema.rs.getFloat("dinero_total")));
-            }
-        } catch (Exception e) {
-        }
-    }
-    
-    private void designTabla(){
+    private void designTablaResumenMedios(){
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         
         
+        //TAMAÑO DE COLUMNAS
+        TableColumnModel modeloC = vista.tblResumenMedios.getColumnModel();
+        modeloC.getColumn(0).setPreferredWidth(25);
+        modeloC.getColumn(1).setPreferredWidth(20);
+        modeloC.getColumn(2).setPreferredWidth(20);
         
+        
+        //CENTRAR CABECERA
+        ((DefaultTableCellRenderer) vista.tblResumenMedios.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(0);
+       
+        //PROHIBIR MOVER LA CABECERA
+        vista.tblResumenMedios.getTableHeader().setReorderingAllowed(false);
+
         TableColumnModel modelo;
         modelo=vista.tblResumenMedios.getColumnModel();
+        int cc= modelo.getColumnCount();
+        for (int i = 0; i < cc; i++) {
+            modelo.getColumn(i).setCellRenderer(centerRenderer);
+        }
         
-        modelo.getColumn(2).setPreferredWidth(10);
+        vista.tblResumenMedios.setRowHeight(25);
+        vista.tblResumenMedios.getTableHeader().setPreferredSize(new Dimension(20,25));
+    }
+    
+    private void designTablaResumenDinero(){
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        
+        //TAMAÑO DE COLUMNAS
+        TableColumnModel modeloC = vista.tblResumenDinero.getColumnModel();
+        modeloC.getColumn(0).setPreferredWidth(15);
+        modeloC.getColumn(1).setPreferredWidth(50);
+        
+        
+        //CENTRAR CABECERA
+        ((DefaultTableCellRenderer) vista.tblResumenDinero.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(0);
+       
+        //PROHIBIR MOVER LA CABECERA
+        vista.tblResumenDinero.getTableHeader().setReorderingAllowed(false);
+        
+        
+        
+        TableColumnModel modelo;
+        modelo=vista.tblResumenDinero.getColumnModel();
+        
         
         int cc= modelo.getColumnCount();
         for (int i = 0; i < cc; i++) {
             modelo.getColumn(i).setCellRenderer(centerRenderer);
         }
         
-        vista.tblResumenMedios.setRowHeight(30);
-        vista.tblResumenMedios.getTableHeader().setPreferredSize(new Dimension(20,20));
+        vista.tblResumenDinero.setRowHeight(25);
+        vista.tblResumenDinero.getTableHeader().setPreferredSize(new Dimension(20,25));
     }
     
     private void datosTablaResumenMedios() throws SQLException{
+        
         DefaultTableModel modeloT = new DefaultTableModel();
         vista.tblResumenMedios.setModel(modeloT);
-        modeloT.addColumn("Codigo de medio");
         modeloT.addColumn("Nombre");
-        modeloT.addColumn("Monto");
-        modeloT.addColumn("Descripcion");
+        modeloT.addColumn("Monto Total");
+        modeloT.addColumn("Moneda");
         
-        //conectar();
-        PreparedStatement ps=null;
+        try {
+            Sistema.st=Sistema.con.createStatement();
+            
+            ResultSet rsT;
+            
+            String sql ="SELECT nombre_medio,monto_total,cod_moneda FROM medio where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
+
+            rsT=Sistema.st.executeQuery(sql);
+            ResultSetMetaData rsMD=rsT.getMetaData();
+            int cc=rsMD.getColumnCount();
+
+            while(rsT.next()){      
+                Object[] row = new Object[cc];
+                for (int i = 0; i < cc; i++) {
+                    row[i]=rsT.getObject(i+1);
+                }
+                modeloT.addRow(row);
+            }
+            
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void datosTablaResumenDinero() throws SQLException{
+        DefaultTableModel modeloT = new DefaultTableModel();
+        vista.tblResumenDinero.setModel(modeloT);
+        modeloT.addColumn("Moneda");
+        modeloT.addColumn("Dinero total");
+        
         ResultSet rsT;
-        String sql ="SELECT cod_medio,nombre_medio,monto_total,descripcion FROM medio WHERE nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
-        ps=Sistema.con.prepareStatement(sql);
-        rsT=ps.executeQuery();
+        String sql ="SELECT distinct cod_moneda FROM medio where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
+        
+        Sistema.st=Sistema.con.createStatement();
+
+        rsT=Sistema.st.executeQuery(sql);
         
         ResultSetMetaData rsMD = rsT.getMetaData();
-        
         int cc=rsMD.getColumnCount();
         
+        
         while(rsT.next()){
-            Object[] row = new Object[cc];
-            for (int i = 0; i < cc; i++) {
-                row[i]=rsT.getObject(i+1);
+            Statement st = Sistema.con.createStatement();
+            String sql2 = "select distinct ifnull((select sum(monto_total) from medio where cod_moneda='"+rsT.getString("cod_moneda")+"'),0) as suma from (select * from medio) as b where nombre_usuario='"+Sistema.usuarioConectado.getNombre_usuario()+"'";
+
+            ResultSet rs = st.executeQuery(sql2);
+            Object[] row = new Object[2];
+
+            while(rs.next()){
+                row[0]=rsT.getString("cod_moneda");
+                row[1]=rs.getString("suma");
             }
+            
             modeloT.addRow(row);
         }
-        
-        designTabla();
     }
     
     public void funcionalidades(){
         this.vista.btnMedios.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
                 try {
                     FrmMedio vistaM = new FrmMedio();
                     ControladorFrmMedio controladorM = new ControladorFrmMedio(vistaM);
@@ -130,11 +195,16 @@ public class ControladorFrmVistaGeneral {
             }
         });
     }
+
     
     public void design() throws SQLException{
         vista.txtNombreUsuario.setText(Sistema.usuarioConectado.getNombre_usuario());
-        obtenerDineroTotal();
+        
+        datosTablaResumenDinero();
+        designTablaResumenDinero();
         datosTablaResumenMedios();
+        designTablaResumenMedios();
+                
     }
     
     public void frmIniciar() throws SQLException{

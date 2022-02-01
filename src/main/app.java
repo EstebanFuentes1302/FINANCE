@@ -5,13 +5,12 @@
  */
 package main;
 
-import com.bulenkov.darcula.DarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 import controlador.ControladorFrmLogin;
 import general.Sistema;
 import java.sql.SQLException;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.basic.BasicLookAndFeel;
 import vista.FrmLogin;
 
 /**
@@ -30,12 +29,10 @@ public class app {
      */
     public static void main(String[] args) throws SQLException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         
-        //TEMA OSCURO
-        /*BasicLookAndFeel darcula = new DarculaLaf();
-        UIManager.setLookAndFeel(darcula);*/
+        UIManager.setLookAndFeel(new FlatDarkLaf());
         
         //TEMA DE SISTEMA OPERATIVO
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
         //CONEXION A BASE DE DATOS
         Sistema.conectar();
