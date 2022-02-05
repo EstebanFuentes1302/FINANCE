@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -33,9 +35,15 @@ import vista.FrmVistaGeneral;
  */
 public class ControladorFrmMedio {
     private FrmMedio vista;
-    
+    private String nombre_medio;
     public ControladorFrmMedio(FrmMedio vista) throws SQLException{
         this.vista=vista;
+        frmIniciar();
+    }
+    
+    public ControladorFrmMedio(FrmMedio vista,String nombre_medio) throws SQLException{
+        this.vista=vista;
+        this.nombre_medio=nombre_medio;
         frmIniciar();
     }
     
@@ -103,16 +111,25 @@ public class ControladorFrmMedio {
                 }
             }
         });
+        
     }
+    
+    
     
     public void accionComboBox(){
         try {
             if(vista.cboNombreMedio.getSelectedItem()!=null){
+                if(nombre_medio!=null){
+                    Sistema.st=Sistema.con.createStatement();
+                    String sql="SELECT cod_medio,cod_moneda FROM medio WHERE nombre_medio='"+nombre_medio+"'";
+                    Sistema.rs=Sistema.st.executeQuery(sql);
+                    System.out.println("adfnkladfl");
+                }else{
+                    Sistema.st=Sistema.con.createStatement();
+                    String sql="SELECT cod_medio,cod_moneda FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
+                    Sistema.rs=Sistema.st.executeQuery(sql);
+                } 
                 datosTabla();
-            
-                Sistema.st=Sistema.con.createStatement();
-                String sql="SELECT cod_medio,cod_moneda FROM medio WHERE nombre_medio='"+vista.cboNombreMedio.getSelectedItem().toString()+"'";
-                Sistema.rs=Sistema.st.executeQuery(sql);
 
                 while(Sistema.rs.next()){
                     vista.txtCodigoMedio.setText(Sistema.rs.getString("cod_medio"));
@@ -195,6 +212,11 @@ public class ControladorFrmMedio {
          for (int i = 0; i < cc; i++) {
              modelo.getColumn(i).setCellRenderer(centerRenderer);
          }
+         
+         //ACCION AL SELECCIONAR
+         vista.tblOperaciones.setDefaultEditor(Object.class, null);
+         vista.tblOperaciones.setEnabled(true);
+         
     }
 
     public void ComboBox() throws SQLException{

@@ -9,13 +9,14 @@ import general.Sistema;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -50,7 +51,7 @@ public class ControladorFrmVistaGeneral {
         
         
         //CENTRAR CABECERA
-        ((DefaultTableCellRenderer) vista.tblResumenMedios.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(0);
+        //((DefaultTableCellRenderer) vista.tblResumenMedios.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(0);
        
         //PROHIBIR MOVER LA CABECERA
         vista.tblResumenMedios.getTableHeader().setReorderingAllowed(false);
@@ -99,7 +100,6 @@ public class ControladorFrmVistaGeneral {
     }
     
     private void datosTablaResumenMedios() throws SQLException{
-        
         DefaultTableModel modeloT = new DefaultTableModel();
         vista.tblResumenMedios.setModel(modeloT);
         modeloT.addColumn("Nombre");
@@ -162,6 +162,20 @@ public class ControladorFrmVistaGeneral {
             
             modeloT.addRow(row);
         }
+        
+        vista.tblResumenMedios.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                try {
+                    FrmMedio vistaNM = new FrmMedio();
+                    ControladorFrmMedio controladorFrmMedio = new ControladorFrmMedio(vistaNM,vista.tblResumenMedios.getValueAt(vista.tblResumenMedios.getSelectedRow(),0).toString());
+                    vista.dispose();
+                } catch (SQLException ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+        
     }
     
     public void funcionalidades(){
@@ -196,7 +210,6 @@ public class ControladorFrmVistaGeneral {
         });
     }
 
-    
     public void design() throws SQLException{
         vista.txtNombreUsuario.setText(Sistema.usuarioConectado.getNombre_usuario());
         
@@ -213,4 +226,5 @@ public class ControladorFrmVistaGeneral {
         vista.setVisible(true);
         design();
     }
+    
 }
